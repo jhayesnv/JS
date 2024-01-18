@@ -1,5 +1,6 @@
-import {searchInputEl, searchFormEl, jobListSearchEl, numberEl } from "../common.js";
+import {searchInputEl, searchFormEl, jobListSearchEl, numberEl, BASE_API_URL } from "../common.js";
 import renderError from "./Error.js";
+import renderJobList from "./JobList.js";
 import renderSpinner from "./Spinner.js";
 
 // search component
@@ -28,7 +29,7 @@ const submitHandler = (e) => {
     renderSpinner('search');
 
     // fetch search results
-    fetch(`https://bytegrad.com/course-assets/js/2/api/jobs?search=${searchText}`)
+    fetch(`${BASE_API_URL}/jobs?search=${searchText}`)
         .then(res => {
             if (!res.ok) {
                 console.log('Something went wrong');
@@ -47,29 +48,7 @@ const submitHandler = (e) => {
             numberEl.textContent = jobItems.length;
 
             // render job items in search job list
-            jobItems.slice(0, 7).forEach(item => {
-                const newJobItemHTML = `
-                <li class="job-item">
-                    <a class="job-item__link" href="${item.id}">
-                        <div class="job-item__badge">${item.badgeLetters}</div>
-                        <div class="job-item__middle">
-                            <h3 class="third-heading">${item.title}</h3>
-                            <p class="job-item__company">${item.company}</p>
-                            <div class="job-item__extras">
-                                <p class="job-item__extra"><i class="fa-solid fa-clock job-item__extra-icon"></i> ${item.duration}</p>
-                                <p class="job-item__extra"><i class="fa-solid fa-money-bill job-item__extra-icon"></i> ${item.salary}</p>
-                                <p class="job-item__extra"><i class="fa-solid fa-location-dot job-item__extra-icon"></i> ${item.location}</p>
-                            </div>
-                        </div>
-                        <div class="job-item__right">
-                            <i class="fa-solid fa-bookmark job-item__bookmark-icon"></i>
-                            <time class="job-item__time">${item.daysAgo}</time>
-                        </div>
-                    </a>
-                </li>
-            `;
-            jobListSearchEl.insertAdjacentHTML('beforeend', newJobItemHTML);
-            });
+            renderJobList(jobItems);
         })
         .catch(err => console.log(err));
 }
