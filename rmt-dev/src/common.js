@@ -23,3 +23,15 @@ export const sortingBtnRelevantEl = document.querySelector(".sorting__button--re
 export const sortingBtnRecentEl = document.querySelector(".sorting__button--recent");
 export const spinnerSearchEl = document.querySelector(".spinner--search");
 export const spinnerJobDetailsEl = document.querySelector(".spinner--job-details");
+
+// helper + utility functions
+export const getData = async completeURL => {
+    const res = await fetch(completeURL);
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error('Resource or server issue occurred');
+    }
+
+    return data;
+};

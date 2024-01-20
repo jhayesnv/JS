@@ -1,4 +1,4 @@
-import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL } from "../common.js";
+import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL, getData } from "../common.js";
 import renderJobDetails from "./JobDetails.js";
 import renderSpinner from "./Spinner.js";
 
@@ -28,7 +28,7 @@ const renderJobList = jobItems => {
 }
 
 // job list component
-const clickHandler = (e) => {
+const clickHandler = async e => {
     e.preventDefault();
 
     // get clicked job item element
@@ -50,22 +50,19 @@ const clickHandler = (e) => {
     const id = jobItemEl.children[0].getAttribute('href');
 
     // fetch job item data
-    fetch(`${BASE_API_URL}/jobs/${id}`)
-        .then(res => {
-            if (!res.ok) {
-                console.log('Something went wrong');
-                return;
-            }
-            return res.json() 
-        })
-        .then(data => {
-            const { jobItem } = data;
-            // remove spinner
-            renderSpinner('job-details');
-            // render job details
-            jobDetailsContentEl.innerHTML = renderJobDetails(jobItem);
-        })
-        .catch(err => console.log(err))
+    try {
+        const data = await getData(`${BASE_API_URL}/jobs/${id}`);
+    
+        const { jobItem } = data;
+        // remove spinner
+        renderSpinner('job-details');
+        // render job details
+        jobDetailsContentEl.innerHTML = renderJobDetails(jobItem);
+    
+    } catch (error) {
+        renderSpinner('job-details');
+        renderError(err.message);
+    }
 };
 
 jobListSearchEl.addEventListener('click', clickHandler);
