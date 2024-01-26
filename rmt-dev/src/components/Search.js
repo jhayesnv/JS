@@ -1,6 +1,7 @@
-import {searchInputEl, searchFormEl, jobListSearchEl, numberEl, BASE_API_URL, getData, state } from "../common.js";
+import {searchInputEl, searchFormEl, jobListSearchEl, numberEl, BASE_API_URL, getData, state, sortingBtnRecentEl, sortingBtnRelevantEl } from "../common.js";
 import renderError from "./Error.js";
 import renderJobList from "./JobList.js";
+import { renderPaginationButtons } from "./Pagination.js";
 import renderSpinner from "./Spinner.js";
 
 // search component
@@ -25,6 +26,10 @@ const submitHandler = async e => {
     // remove previous job items
     jobListSearchEl.innerHTML = '';
 
+    // reset sorting buttons
+    sortingBtnRelevantEl.classList.add('sorting__button--active');
+    sortingBtnRecentEl.classList.remove('sorting__button--active');
+
     // render spinner
     renderSpinner('search');
 
@@ -37,12 +42,16 @@ const submitHandler = async e => {
 
         // update state
         state.searchJobItems = jobItems;
+        state.currentPage = 1;
 
         // remove spinner
         renderSpinner('search');
 
         // render number of results
         numberEl.textContent = jobItems.length;
+
+        // reset pagination buttons
+        renderPaginationButtons();
 
         // render job items in search job list
         renderJobList();

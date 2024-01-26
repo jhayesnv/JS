@@ -1,4 +1,4 @@
-import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL, getData, state } from "../common.js";
+import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL, getData, state, RESULTS_PER_PAGE } from "../common.js";
 import renderJobDetails from "./JobDetails.js";
 import renderSpinner from "./Spinner.js";
 
@@ -7,7 +7,7 @@ const renderJobList = () => {
     jobListSearchEl.innerHTML = '';
 
     // display job items
-    state.searchJobItems.slice(0, 7).forEach(item => {
+    state.searchJobItems.slice(state.currentPage * RESULTS_PER_PAGE - RESULTS_PER_PAGE, state.currentPage * RESULTS_PER_PAGE).forEach(item => {
         const newJobItemHTML = `
         <li class="job-item">
             <a class="job-item__link" href="${item.id}">
@@ -23,7 +23,7 @@ const renderJobList = () => {
                 </div>
                 <div class="job-item__right">
                     <i class="fa-solid fa-bookmark job-item__bookmark-icon"></i>
-                    <time class="job-item__time">${item.daysAgo}</time>
+                    <time class="job-item__time">${item.daysAgo}d</time>
                 </div>
             </a>
         </li>`;
