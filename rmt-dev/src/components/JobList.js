@@ -1,9 +1,13 @@
-import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL, getData } from "../common.js";
+import { jobListSearchEl, jobDetailsContentEl, BASE_API_URL, getData, state } from "../common.js";
 import renderJobDetails from "./JobDetails.js";
 import renderSpinner from "./Spinner.js";
 
-const renderJobList = jobItems => {
-    jobItems.slice(0, 7).forEach(item => {
+const renderJobList = () => {
+    // remove previous job items
+    jobListSearchEl.innerHTML = '';
+
+    // display job items
+    state.searchJobItems.slice(0, 7).forEach(item => {
         const newJobItemHTML = `
         <li class="job-item">
             <a class="job-item__link" href="${item.id}">
@@ -52,13 +56,13 @@ const clickHandler = async e => {
     // fetch job item data
     try {
         const data = await getData(`${BASE_API_URL}/jobs/${id}`);
-    
+
         const { jobItem } = data;
         // remove spinner
         renderSpinner('job-details');
         // render job details
         jobDetailsContentEl.innerHTML = renderJobDetails(jobItem);
-    
+
     } catch (error) {
         renderSpinner('job-details');
         renderError(err.message);

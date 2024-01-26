@@ -1,4 +1,4 @@
-import {searchInputEl, searchFormEl, jobListSearchEl, numberEl, BASE_API_URL, getData } from "../common.js";
+import {searchInputEl, searchFormEl, jobListSearchEl, numberEl, BASE_API_URL, getData, state } from "../common.js";
 import renderError from "./Error.js";
 import renderJobList from "./JobList.js";
 import renderSpinner from "./Spinner.js";
@@ -31,19 +31,22 @@ const submitHandler = async e => {
     // fetch search results
     try {
         const data = await getData(`${BASE_API_URL}/jobs?search=${searchText}`);
-    
+
         // extract job items
         const { jobItems } = data;
-    
+
+        // update state
+        state.searchJobItems = jobItems;
+
         // remove spinner
         renderSpinner('search');
-    
+
         // render number of results
         numberEl.textContent = jobItems.length;
-    
+
         // render job items in search job list
-        renderJobList(jobItems);
-    
+        renderJobList();
+
     } catch (error) {
         renderSpinner('search');
         renderError(err.message);
