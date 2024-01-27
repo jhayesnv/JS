@@ -9,7 +9,7 @@ const renderJobList = () => {
     // display job items
     state.searchJobItems.slice(state.currentPage * RESULTS_PER_PAGE - RESULTS_PER_PAGE, state.currentPage * RESULTS_PER_PAGE).forEach(item => {
         const newJobItemHTML = `
-        <li class="job-item">
+        <li class="job-item ${state.activeJobItem.id === item.id ? 'job-item--active' : ''}">
             <a class="job-item__link" href="${item.id}">
                 <div class="job-item__badge">${item.badgeLetters}</div>
                 <div class="job-item__middle">
@@ -52,6 +52,12 @@ const clickHandler = async e => {
 
     // get the id
     const id = jobItemEl.children[0].getAttribute('href');
+
+    // update state
+    state.activeJobItem = state.searchJobItems.find(jobItem => jobItem.id === +id);
+
+    // add id to url
+    history.pushState(null, '', `/#${id}`);
 
     // fetch job item data
     try {

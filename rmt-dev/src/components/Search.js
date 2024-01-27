@@ -58,7 +58,7 @@ const submitHandler = async e => {
 
     } catch (error) {
         renderSpinner('search');
-        renderError(err.message);
+        renderError(error.message);
     }
 }
 
